@@ -1,4 +1,7 @@
 import { useState, useEffect } from 'react';
+
+import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer } from 'recharts';
+
 import './index.css';
 
 const Table = () => {
@@ -6,11 +9,21 @@ const Table = () => {
   const [search, setSearch] = useState('');
   const [transactions, setTransactions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [statistics, setStatistics] = useState({});
+  const [barChartData, setBarChartData] = useState([]);
   const [loading, setLoading] = useState(false);
+
+
 
   useEffect(() => {
     loadTransactions();
+    loadStatistics(month); 
+    loadBarChartData(month);
+
   }, [month, search, currentPage]); // Reload transactions when month, search, or currentPage changes
+
+  
+
 
   const loadTransactions = () => {
     setLoading(true);
@@ -26,6 +39,29 @@ const Table = () => {
       });
   };
 
+
+  const loadStatistics = () => {
+    fetch(`http://localhost:3000/api/statistics?month=${month}`)
+      .then(response => response.json())
+      .then(data => {
+        setStatistics(data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+  const displayMonthName = () => {
+    const months = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+  
+    const selectedMonth = months[parseInt(month, 10) - 1];
+    return selectedMonth;
+  };
+
+  
   const displayMonthOptions = () => {
     const months = [
       { value: '01', label: 'January' },
@@ -80,6 +116,34 @@ const Table = () => {
     loadTransactions();
   };
 
+  const loadBarChartData = () => {
+    fetch(`http://localhost:3000/api/bar-chart?month=${month}`)
+      .then(response => response.json())
+      .then(data => {
+        setBarChartData(data.barChartData);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+  const displayPriceBarChart = () => {
+    return (
+      <div>
+        <h2>Transactions Bar Chart</h2>
+        <BarChart width={600} height={300} data={barChartData}>
+          <XAxis dataKey="range" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="count" fill="#8884d8" />
+        </BarChart>
+      </div>
+    );
+  };
+
+
+
   return (
     <div className="App">
       <h2>Transactions Table</h2>
@@ -115,6 +179,25 @@ const Table = () => {
 
           <button onClick={() => handlePageChange('prev')}>Previous</button>
           <button onClick={() => handlePageChange('next')}>Next</button>
+
+          <br/>
+
+          <div className="statistics-card">
+            <h3>Statistics for {displayMonthName()}</h3>
+            <p>Total Sale Amount: ${statistics.totalSaleAmount}</p>
+            <p>Total Sold Items: {statistics.totalSoldItems}</p>
+            <p>Total Not Sold Items: {statistics.totalNotSoldItems}</p>
+          </div>
+
+          <div>
+            <h3>Transactions Bar Chart for {displayMonthName()}</h3>
+            {displayPriceBarChart()}
+
+            
+          </div>
+
+
+
         </>
       )}
     </div>
