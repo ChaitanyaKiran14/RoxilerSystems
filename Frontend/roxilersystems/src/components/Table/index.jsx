@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis,  PieChart, Pie, Tooltip, Legend, Sector, ResponsiveContainer, Cell } from 'recharts';
 
 
+
 import './index.css';
 
 const Table = () => {
@@ -16,6 +17,16 @@ const Table = () => {
   const [loading, setLoading] = useState(false);
 
 
+  const displayMonthName = () => {
+    const months = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+  
+    const selectedMonth = months[parseInt(month, 10) - 1];
+    return selectedMonth;
+  };
+
 
   useEffect(() => {
     loadTransactions();
@@ -25,8 +36,7 @@ const Table = () => {
 
   }, [month, search, currentPage]); // Reload transactions when month, search, or currentPage changes
 
-  
-
+  // transactions front end 
 
   const loadTransactions = () => {
     setLoading(true);
@@ -41,29 +51,6 @@ const Table = () => {
         setLoading(false);
       });
   };
-
-
-  const loadStatistics = () => {
-    fetch(`http://localhost:3000/api/statistics?month=${month}`)
-      .then(response => response.json())
-      .then(data => {
-        setStatistics(data);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  };
-
-  const displayMonthName = () => {
-    const months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
-    ];
-  
-    const selectedMonth = months[parseInt(month, 10) - 1];
-    return selectedMonth;
-  };
-
   
   const displayMonthOptions = () => {
     const months = [
@@ -119,6 +106,22 @@ const Table = () => {
     loadTransactions();
   };
 
+
+  //statistics   front end
+
+  
+  const loadStatistics = () => {
+    fetch(`http://localhost:3000/api/statistics?month=${month}`)
+      .then(response => response.json())
+      .then(data => {
+        setStatistics(data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+  
   //bargraph frontend
 
   const loadBarChartData = () => {
