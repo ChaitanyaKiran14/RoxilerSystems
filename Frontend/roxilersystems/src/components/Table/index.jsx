@@ -1,24 +1,30 @@
 import { useState, useEffect } from 'react';
 import './index.css';
 
-
-const Table = () =>  {
-  const [month, setMonth] = useState('01'); // Default to March
+const Table = () => {
+  const [month, setMonth] = useState('03'); // Default to March
   const [search, setSearch] = useState('');
   const [transactions, setTransactions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     loadTransactions();
   }, [month, search, currentPage]); // Reload transactions when month, search, or currentPage changes
 
   const loadTransactions = () => {
+    setLoading(true);
     fetch(`http://localhost:3000/api/transactions?month=${month}&search=${search}&page=${currentPage}`)
       .then(response => response.json())
-      .then(data => setTransactions(data.transactions))
-      .catch(error => console.error(error));
+      .then(data => {
+        setTransactions(data.transactions);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error(error);
+        setLoading(false);
+      });
   };
-
 
   const displayMonthOptions = () => {
     const months = [
@@ -46,9 +52,15 @@ const Table = () =>  {
   const displayTransactions = () => {
     return transactions.map(transaction => (
       <tr key={transaction.id}>
+        <td>{transaction.id}</td>
         <td>{transaction.title}</td>
         <td>{transaction.description}</td>
         <td>{transaction.price}</td>
+        <td>{transaction.category}</td>
+        <td>{transaction.sold ? 'Yes' : 'No'}</td>
+        <td>
+          <img src={transaction.image} alt={transaction.title} style={{ width: '50px', height: '50px' }} />
+        </td>
       </tr>
     ));
   };
@@ -77,27 +89,36 @@ const Table = () =>  {
         {displayMonthOptions()}
       </select>
 
-
       <label htmlFor="search">Search:</label>
       <input type="text" id="search" value={search} onChange={(e) => setSearch(e.target.value)} />
 
       <button onClick={handleSearch}>Search</button>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Price</th>
-          </tr>
-        </thead>
-        <tbody>{displayTransactions()}</tbody>
-      </table>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>Sold</th>
+                <th>Image</th>
+              </tr>
+            </thead>
+            <tbody>{displayTransactions()}</tbody>
+          </table>
 
-      <button onClick={() => handlePageChange('prev')}>Previous</button>
-      <button onClick={() => handlePageChange('next')}>Next</button>
+          <button onClick={() => handlePageChange('prev')}>Previous</button>
+          <button onClick={() => handlePageChange('next')}>Next</button>
+        </>
+      )}
     </div>
   );
-}
+};
 
-export default Table
+export default Table;
