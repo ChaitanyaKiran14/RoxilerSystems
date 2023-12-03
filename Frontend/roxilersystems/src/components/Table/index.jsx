@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import './index.css';
 
+
 const Table = () =>  {
-  const [month, setMonth] = useState('03'); // Default to March
+  const [month, setMonth] = useState('01'); // Default to March
   const [search, setSearch] = useState('');
   const [transactions, setTransactions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,6 +17,30 @@ const Table = () =>  {
       .then(response => response.json())
       .then(data => setTransactions(data.transactions))
       .catch(error => console.error(error));
+  };
+
+
+  const displayMonthOptions = () => {
+    const months = [
+      { value: '01', label: 'January' },
+      { value: '02', label: 'February' },
+      { value: '03', label: 'March' },
+      { value: '04', label: 'April' },
+      { value: '05', label: 'May' },
+      { value: '06', label: 'June' },
+      { value: '07', label: 'July' },
+      { value: '08', label: 'August' },
+      { value: '09', label: 'September' },
+      { value: '10', label: 'October' },
+      { value: '11', label: 'November' },
+      { value: '12', label: 'December' },
+    ];
+
+    return months.map(month => (
+      <option key={month.value} value={month.value}>
+        {month.label}
+      </option>
+    ));
   };
 
   const displayTransactions = () => {
@@ -49,8 +74,9 @@ const Table = () =>  {
 
       <label htmlFor="month">Select Month:</label>
       <select id="month" value={month} onChange={(e) => setMonth(e.target.value)}>
-        {/* Add month options here */}
+        {displayMonthOptions()}
       </select>
+
 
       <label htmlFor="search">Search:</label>
       <input type="text" id="search" value={search} onChange={(e) => setSearch(e.target.value)} />
