@@ -45,7 +45,9 @@ app.get('/api/transactions', async (req, res) => {
 });
 
 
+
 // API endpoint for statistics
+
 app.get('/api/statistics', async (req, res) => {
   try {
     const { month } = req.query;
@@ -73,6 +75,8 @@ app.get('/api/statistics', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+
 
 
 //bargraph end point
@@ -123,6 +127,8 @@ app.get('/api/bar-chart', async (req, res) => {
 });
 
 
+
+
 //pie chart statistics
 
 app.get('/api/pie-chart', async (req, res) => {
@@ -153,6 +159,37 @@ app.get('/api/pie-chart', async (req, res) => {
     }));
 
     res.json({ pieChartData });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+//combined 
+
+app.get('/api/combined', async (req, res) => {
+  try {
+    // Fetch data from the transaction API
+    const transactionsResponse = await axios.get('http://localhost:3000/api/transactions');
+    const transactions = transactionsResponse.data.transactions;
+
+    // Fetch data from the statistics API
+    const statisticsResponse = await axios.get('http://localhost:3000/api/statistics');
+    const statistics = statisticsResponse.data;
+
+    // Fetch data from the bargraph API
+    const bargraphResponse = await axios.get('http://localhost:3000/api/bargraph');
+    const bargraph = bargraphResponse.data;
+
+    // Combine the responses
+    const combinedResponse = {
+      transactions,
+      statistics,
+      bargraph,
+    };
+
+    res.json(combinedResponse);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
