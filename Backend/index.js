@@ -166,38 +166,6 @@ app.get('/api/pie-chart', async (req, res) => {
 });
 
 
-//combined 
-
-app.get('/api/combined', async (req, res) => {
-  try {
-    // Fetch data from the transaction API
-    const transactionsResponse = await axios.get('http://localhost:3000/api/transactions');
-    const transactions = transactionsResponse.data.transactions;
-
-    // Fetch data from the statistics API
-    const statisticsResponse = await axios.get('http://localhost:3000/api/statistics');
-    const statistics = statisticsResponse.data;
-
-    // Fetch data from the bargraph API
-    const bargraphResponse = await axios.get('http://localhost:3000/api/bargraph');
-    const bargraph = bargraphResponse.data;
-
-    // Combine the responses
-    const combinedResponse = {
-      transactions,
-      statistics,
-      bargraph,
-    };
-
-    res.json(combinedResponse);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-
-
 
 // Start the server
 app.listen(PORT, () => {
