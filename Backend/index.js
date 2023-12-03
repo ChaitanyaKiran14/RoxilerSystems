@@ -123,6 +123,43 @@ app.get('/api/bar-chart', async (req, res) => {
 });
 
 
+//pie chart statistics
+
+app.get('/api/pie-chart', async (req, res) => {
+  try {
+    const { month } = req.query;
+
+    // Fetch data from the third-party API
+    const response = await axios.get('https://s3.amazonaws.com/roxiler.com/product_transaction.json');
+    const transactions = response.data;
+
+    // Filter data based on the provided month
+    const filteredTransactions = transactions
+      .filter(transaction => new Date(transaction.dateOfSale).getMonth() === (new Date(month).getMonth()));
+
+    // Calculate unique categories and count items in each category
+    const categoryCount = {};
+    filteredTransactions.forEach(transaction => {
+      if (categoryCount[transaction.category]) {
+        categoryCount[transaction.category]++;
+      } else {
+        categoryCount[transaction.category] = 1;
+      }
+    });
+
+    const pieChartData = Object.entries(categoryCount).map(([category, count]) => ({
+      category,
+      count
+    }));
+
+    res.json({ pieChartData });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
 
 
 // Start the server

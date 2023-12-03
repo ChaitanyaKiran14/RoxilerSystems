@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis,  PieChart, Pie, Tooltip, Legend, Sector, ResponsiveContainer, Cell } from 'recharts';
+
 
 import './index.css';
 
@@ -11,6 +12,7 @@ const Table = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [statistics, setStatistics] = useState({});
   const [barChartData, setBarChartData] = useState([]);
+  const [pieChartData, setPieChartData] = useState([]);
   const [loading, setLoading] = useState(false);
 
 
@@ -19,6 +21,7 @@ const Table = () => {
     loadTransactions();
     loadStatistics(month); 
     loadBarChartData(month);
+    loadPieChartData(month);
 
   }, [month, search, currentPage]); // Reload transactions when month, search, or currentPage changes
 
@@ -116,6 +119,8 @@ const Table = () => {
     loadTransactions();
   };
 
+  //bargraph frontend
+
   const loadBarChartData = () => {
     fetch(`http://localhost:3000/api/bar-chart?month=${month}`)
       .then(response => response.json())
@@ -129,8 +134,8 @@ const Table = () => {
 
   const displayPriceBarChart = () => {
     return (
-      <div>
-        <h2>Transactions Bar Chart</h2>
+      <div className="statistics-card">
+        <h2>Transactions Bar Chart for {displayMonthName()} </h2>
         <BarChart width={600} height={300} data={barChartData}>
           <XAxis dataKey="range" />
           <YAxis />
@@ -142,7 +147,51 @@ const Table = () => {
     );
   };
 
+  // piechart front end
 
+  const loadPieChartData = () => {
+    fetch(`http://localhost:3000/api/pie-chart?month=${month}`)
+      .then(response => response.json())
+      .then(data => {
+        setPieChartData(data.pieChartData);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+  const displayCategoryPieChart = () => {
+    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AF19FF', '#FF6666', '#99FF99', '#6666FF', '#FF9966', '#FFCC99'];
+
+    return (
+      <div className="statistics-card pie">
+      
+      <div className="PieChart" >
+        <h2>Transactions Pie Chart for {displayMonthName()}  </h2>
+        <PieChart width={400} height={400}>
+          <Pie dataKey="count" data={pieChartData} cx={200} cy={200} outerRadius={80} fill="#8884d8" label>
+            {pieChartData.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+            ))}
+          </Pie>
+          <Tooltip />
+          <Legend />
+        </PieChart>
+
+        <div>
+          {pieChartData.map((entry, index) => (
+            <div key={index} style={{ margin: '5px', display: 'flex', alignItems: 'center' }}>
+              <div style={{ width: '20px', height: '20px', backgroundColor: COLORS[index % COLORS.length] }}></div>
+              <span style={{ marginLeft: '5px' }}>{entry.category}: {entry.count} items</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      </div>
+    );
+  };
+
+ 
 
   return (
     <div className="App">
@@ -190,14 +239,15 @@ const Table = () => {
           </div>
 
           <div>
-            <h3>Transactions Bar Chart for {displayMonthName()}</h3>
+            
             {displayPriceBarChart()}
+            {displayCategoryPieChart()}
+
 
             
           </div>
-
-
-
+          
+       
         </>
       )}
     </div>
