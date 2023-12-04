@@ -55,13 +55,13 @@ npm start
 
 ```bash
 # Navigate to the frontend directory
-cd frontend
+cd Frontend/roxilersystems/
 
 # Install dependencies
 npm install
 
 # Start the frontend application
-npm start
+npm run dev
 ```
 
 ## Backend API Endpoints
