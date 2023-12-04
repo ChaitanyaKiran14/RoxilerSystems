@@ -114,8 +114,16 @@ The bar chart component visualizes the distribution of transaction amounts withi
 The pie chart component illustrates the distribution of items across different categories for the selected month.
 
 ## Screenshots
+Default month selected
+![1](https://github.com/ChaitanyaKiran14/RoxilerSystems/assets/132725548/e0b30268-aa67-4d2c-8ef0-e9d29fcbeec4)
+Statistics and Bar Chart of default month
+![2](https://github.com/ChaitanyaKiran14/RoxilerSystems/assets/132725548/e9a987c8-32c2-45df-9c19-f6eee51a35b3)
+Pie Chart of default month
+![3](https://github.com/ChaitanyaKiran14/RoxilerSystems/assets/132725548/a6735578-2287-417f-8858-60aaac82c2a9)
 
-Include screenshots or GIFs showcasing the frontend UI and any significant features.
+
+
+
 
 ## Contributing
 
