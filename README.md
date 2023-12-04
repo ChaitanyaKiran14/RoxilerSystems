@@ -1,11 +1,5 @@
 # RoxilerSystems
 
-Certainly! Below is a more detailed README with backend and frontend API endpoints for your project:
-
----
-
-# Transactions Management System
-
 This project is a Transactions Management System that allows users to view, search, and analyze transaction data. The system provides various features such as viewing transactions, generating statistics, and visualizing data through bar and pie charts.
 
 ## Table of Contents
