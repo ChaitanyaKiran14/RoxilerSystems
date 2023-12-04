@@ -42,13 +42,13 @@ The Transactions Management System is designed to facilitate the handling and an
 git clone https://github.com/your-username/your-repo.git
 
 # Navigate to the backend directory
-cd backend
+cd Backend
 
 # Install dependencies
 npm install
 
 # Start the backend server
-npm start
+node index.js
 ```
 
 ### Frontend Setup
