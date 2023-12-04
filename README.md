@@ -102,11 +102,14 @@ npm start
 
 The transactions table component displays a paginated list of transactions. Users can search for specific transactions and navigate through pages.
 
-### 2. Bar Chart
+### 2. Statistics 
+The statistics component provides a summary of key metrics for the selected month, including total sale amount, total sold items, and total not sold items.
+
+### 3. Bar Chart
 
 The bar chart component visualizes the distribution of transaction amounts within specified price ranges for the selected month.
 
-### 3. Pie Chart
+### 4. Pie Chart
 
 The pie chart component illustrates the distribution of items across different categories for the selected month.
 
